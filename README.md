@@ -104,4 +104,4 @@ It will delete all bake bundles that were not found in the new version of the as
 Or it will notify you that retopo and reference object names do not correspond to each other.
 
 ## License
-See the LICENSE.md file.
+See the [LICENSE](https://github.com/ajz3d/dynamite/blob/master/LICENSE) file.
