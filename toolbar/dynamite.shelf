@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shelfDocument>
+  <!-- This file contains definitions of shelves, toolbars, and tools.
+ It should not be hand-edited when it is being used by the application.
+ Note, that two definitions of the same element are not allowed in
+ a single file. -->
+
+  <tool name="dynamite" label="Dynamite" icon="PLASMA_App">
+    <script scriptType="python"><![CDATA[import dynamite.dynamite as dynamite
+reload(dynamite)
+
+def getCurrentNetworkEditor(desktop):
+    for pane in desktop.paneTabs():
+        if isinstance(pane, hou.NetworkEditor) and pane.isCurrentTab():
+            return pane
+
+if hou.node('/obj/dynamite_control') is not None:
+    control_node = hou.node('/obj/dynamite_control')
+    getCurrentNetworkEditor(hou.ui.curDesktop()).setCurrentNode(control_node)
+else:
+    control_node = dynamite.create_control_node()
+    getCurrentNetworkEditor(hou.ui.curDesktop()).setCurrentNode(hou.node('/obj/dynamite_control'))]]></script>
+  </tool>
+
+  <toolshelf name="dynamite" label="Dynamite">
+    <memberTool name="dynamite0"/>
+  </toolshelf>
+
+  <tool name="dynamite0" label="Dynamite" icon="PLASMA_App">
+    <script scriptType="python"><![CDATA[import dynamite.dynamite as dynamite
+reload(dynamite)
+
+def getCurrentNetworkEditor(desktop):
+    for pane in desktop.paneTabs():
+        if isinstance(pane, hou.NetworkEditor) and pane.isCurrentTab():
+            return pane
+
+if hou.node('/obj/dynamite_control') is not None:
+    control_node = hou.node('/obj/dynamite_control')
+    getCurrentNetworkEditor(hou.ui.curDesktop()).setCurrentNode(control_node)
+else:
+    control_node = dynamite.create_control_node()
+    getCurrentNetworkEditor(hou.ui.curDesktop()).setCurrentNode(hou.node('/obj/dynamite_control'))]]></script>
+  </tool>
+</shelfDocument>
