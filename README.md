@@ -2,7 +2,7 @@
 ## Description
 Dynamite is a Python script for Houdini that fits perfectly for the iterative 3D asset development environment, where changes to low and high poly geometry are introduced on a frequent basis.
 
-The script streamlines the process of creating cages and reduces tediousness of recreating them whenever the model gets replaced by its new version. With Dynamite you won't need to redo cages of objects which weren't modified in the last iteration, and only those that were altered will require your attention. This cuts the wasted time that would otherwise be spent on redoing all cages from scratch on each consecutive asset iteration.
+The script streamlines the process of creating cages and reduces tediousness of recreating them whenever the model gets replaced by its new version. With Dynamite you won't need to redo cages of objects which weren't modified in the last iteration, and only those that were altered will require your attention. This reduces the time that would otherwise be spent on redoing all cages from scratch on each consecutive asset iteration.
 
 ## Installation
 1.  Clone or download Dynamite repository and extract `./dynamite` folder to your `HOUDINI_USER_PREF_DIR\python2.7libs` directory. `HOUDINI_USER_PREF_DIR` is usually `c:\Users\your_user_name\Documents\Houdinixx.x` path on Windows.
