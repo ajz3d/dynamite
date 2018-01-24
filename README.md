@@ -96,6 +96,9 @@ If you need to take advantage of subdivision creases, press the **Edit Cage** bu
 ### Updating The network
 #### After Minor Changes
 If you introduced some changes to your model which do not result in objects being deleted, or new objects groups being added, you won't have to update your network. All you'll have to do is to go through each modified object/primitive group that you have changed (by isolating them) and see if the changes you made didn't introduce some reference-cage interpenetrations or resulted in a mangled cage (remember that Edit SOP depends on topology) If you didn't manually edit the cage and the changes weren't drastic, you should be okay. Otherwise, you should probably either alter the peak distance, slightly tweak the cage, or in the worst case - reset the cage of the object.
+
+> ***TIP***
+> *It never hurts to press the **Update Network** button if your model has been changed.*
 #### After Major Changes
 If you removed some objects, added some new renamed existing ones, you will have to update the whole network by pressing the **Update Network** button on the **Import** tab.
 
