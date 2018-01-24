@@ -46,7 +46,7 @@ In the *Import* tab, select the retopo and reference paths. You can use `op:/` a
 
 If the imported object is too small for your current viewport, you can tweak the `Import Scale` parameter at any time. However keep in mind that this parameter is applied in preprocess. Any modifications to cages will be affected by it, so it's best to determine the proper scale before you start to modify them.
 
-`Smooth Normals` parameter will smooth out retopo and reference normals. This parameter is **DEPRECATED** and will most likely be removed from future Dynamite versions in favor of smoothing reference normals only, so I suggest to smooth your reference mesh and apply appropriate retopo normals before importing your files to Houdini. Or do it in Houdini and link the output with **op:/** (recommended).
+`Smooth Normals` parameter will smooth out retopo and reference normals. This parameter is **DEPRECATED** and will most likely be removed from future Dynamite versions in favor of smoothing reference normals only, so I suggest to smooth your reference mesh and apply appropriate retopo normals before importing your files to Houdini. Or do it in Houdini and link the input with **op:/** (recommended).
 
 Click the `Create Network` button on the `Import` tab to generate *retopo-reference-cage groups* for each object. We're going to call those *retopo-reference-cage* triplets **bake bundles** or **bake groups** from now on.
 
