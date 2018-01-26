@@ -1,6 +1,6 @@
 # Dynamite Tool for Houdini
 ## Description
-Dynamite is a Python script for Houdini that fits perfectly for the iterative 3D asset development environment, where changes to low and high poly geometry are introduced on a frequent basis.
+Dynamite is a Python script for Houdini that fits perfectly in the iterative 3D asset development environment, where changes to low and high poly geometry are introduced on a frequent basis.
 
 The script streamlines the process of creating cages and reduces tediousness of recreating them whenever the model gets replaced by its new version. With Dynamite you won't need to redo cages of objects which weren't modified in the last iteration, and only those that were altered will require your attention. This reduces the time that would otherwise be spent on redoing all cages from scratch on each consecutive asset iteration.
 
@@ -55,7 +55,7 @@ After bake bundles are created, go to the `Edit` tab. Here you will find all obj
 -   **Isolate**: This button is most probably the first so-called *red* button your fingers should feel itchy to press. What it does is it isolates reference and cage meshes of the current object from the others, so that you can not only focus on tweaking a cage for the current object, but you also gain some performance boost that would otherwise be lost by the presence of other high-poly geometry in the viewport.
 -   **Translate**: Translates the whole bundle in a specific direction. This is useful if you intend to bake your model in a software that does not support name correspondence baking, like *xNormal*. You can ignore this parameter if you're baking in Substance Painter or Designer.
 
-> ***TIP***
+> ***TIP:***
 > *For exploding, I recommend keyframing all bundles at their default positions ``(0,0,0)`` at frame 0, then translating them as you will and keyframing at frame 1. This way you will be able to quickly switch between "exploded" and "non-exploded" version of your model in no time.*
 
 -   **Peak Distance**: This is the first parameter you will want to tweak. It inflates the cage along its point (or vertex) normals.
@@ -97,8 +97,9 @@ If you need to take advantage of subdivision creases, press the **Edit Cage** bu
 #### After Minor Changes
 If you introduced some changes to your model which do not result in objects being deleted, or new objects groups being added, you won't have to update your network. All you'll have to do is to go through each modified object/primitive group that you have changed (by isolating them) and see if the changes you made didn't introduce some reference-cage interpenetrations or resulted in a mangled cage (remember that Edit SOP depends on topology) If you didn't manually edit the cage and the changes weren't drastic, you should be okay. Otherwise, you should probably either alter the peak distance, slightly tweak the cage, or in the worst case - reset the cage of the object.
 
-> ***TIP***
+> ***TIP:***
 > *It never hurts to press the **Update Network** button if your model has been changed.*
+
 #### After Major Changes
 If you removed some objects, added some new renamed existing ones, you will have to update the whole network by pressing the **Update Network** button on the **Import** tab.
 

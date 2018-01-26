@@ -23,10 +23,10 @@ else:
   </tool>
 
   <toolshelf name="dynamite" label="Dynamite">
-    <memberTool name="dynamite0"/>
+    <memberTool name="dynamite1"/>
   </toolshelf>
 
-  <tool name="dynamite0" label="Dynamite" icon="PLASMA_App">
+  <tool name="dynamite1" label="Dynamite" icon="$HOUDINI_USER_PREF_DIR/toolbar/dynamite/dynamite_shelf_icon.png">
     <script scriptType="python"><![CDATA[import dynamite.dynamite as dynamite
 reload(dynamite)
 

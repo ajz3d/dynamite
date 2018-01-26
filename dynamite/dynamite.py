@@ -24,7 +24,7 @@ import topo_match
 import os
 import sys
 
-__version__ = '0.9.0'
+__version__ = '0.9.1'
 
 
 class Dynamite(object):
@@ -318,6 +318,7 @@ def create_control_node(path='/obj', in_retopo='$HIP/geo_bake/in_retopo.bgeo',
                                            hou.SeparatorParmTemplate('da_sep5'),
                                            prim_groups)
 
+    parm_template_group.hideFolder('Data', True)
     control_node.setParmTemplateGroup(parm_template_group)
 
     # Initialize important parameters on the data tab.
