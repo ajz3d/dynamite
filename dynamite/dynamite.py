@@ -23,8 +23,10 @@ import hou
 import topo_match
 import os
 import sys
+import time
+import toolutils
 
-__version__ = '0.9.1'
+__version__ = '0.9.2'
 
 
 class Dynamite(object):
@@ -77,6 +79,8 @@ def create_control_node(path='/obj', in_retopo='$HIP/geo_bake/in_retopo.bgeo',
     control_node.setDisplayFlag(False)
     control_node.setSelectableInViewport(False)
     control_node.setColor(DynamiteColor.RED_DARK)
+    set_node_shape(control_node, 23)
+    # control_node.setUserData('nodeshape', hou.ui.paneTabOfType(hou.paneTabType.NetworkEditor).nodeShapes()[23])
     control_node.moveToGoodPosition()
     destroy_children(control_node)
 
@@ -127,8 +131,8 @@ def create_control_node(path='/obj', in_retopo='$HIP/geo_bake/in_retopo.bgeo',
         "Modify if original object scale makes it too incomfortable to work with in Houdini." % (os.linesep,)
     import_scale = hou.FloatParmTemplate('import_scale', 'Import Scale', 1, default_value=(1.0,), help=help)
 
-    help = "Smooths retopo and reference normals."
-    smooth_normals = hou.ToggleParmTemplate('smooth_normals', 'Smooth Normals', False, help=help)
+    help = "Smooth reference normals."
+    smooth_normals = hou.ToggleParmTemplate('smooth_normals', 'Smooth Normals', True, help=help)
 
     script_callback = '%s;dynamite.create_network(hou.pwd())' % Dynamite.MODULE_IMPORT
     help = "Creates bake groups for each retopo object/primitive group."
@@ -352,7 +356,8 @@ def create_network(control_node):
         operation.updateLongProgress(long_op_status='Creating Retopo Source')
         retopo_source_obj = create_source_network('retopo_source', control_node)
         operation.updateLongProgress(long_op_status='Creating Reference Source')
-        reference_source_obj = create_source_network('reference_source', control_node, reference_material.path())
+        reference_source_obj = create_source_network('reference_source', control_node,
+                                                     reference_material.path(), True)
         hou.node(control_node.parm('network_location').eval()).layoutChildren()
 
         retopo_geo = hou.node('%s/is_fbx' % control_node.parm('retopo_source').eval()).geometry()
@@ -430,19 +435,22 @@ def create_network(control_node):
         home_network(network_location)
 
 
-def create_source_network(node_name, control_node, material=''):
+def create_source_network(node_name, control_node, material='', smooth_normals=False):
     """Creates retopo and reference source networks.
     Arguments:
         node_name - prefix of the network (e.g. retopo, reference)
         control_node - Dynamite control hou.ObjNode.
         material - path to material that the generated network will use.
+        smooth_normals - smooth geometry normals.
     :type node_name: str
     :type control_node: hou.ObjNode
-    :type material: str"""
+    :type material: str
+    :type smooth_normals: bool"""
     network_location = control_node.parm('network_location').eval()
     geo_node = hou.node(network_location).createNode('geo')
     geo_node.setName(node_name)
     geo_node.setColor(DynamiteColor.GRAY)
+    set_node_shape(geo_node, 7)
     geo_node.setDisplayFlag(False)
     geo_node.setSelectableInViewport(False)
     destroy_children(geo_node)
@@ -512,7 +520,10 @@ def create_source_network(node_name, control_node, material=''):
 
     normal_switch_sop = geo_node.createNode('switch')
     normal_switch_sop.setName('%s_smooth_normals_switch' % node_name)
-    normal_switch_sop.parm('input').set(control_node.parm('smooth_normals'))
+    if smooth_normals:
+        normal_switch_sop.parm('input').set(control_node.parm('smooth_normals'))
+    else:
+        normal_switch_sop.parm('input').set(0)
 
     xform_sop = geo_node.createNode('xform')
     xform_sop.setName('%s_xform' % node_name)
@@ -579,6 +590,7 @@ def create_output_group(node_name, group_type, control_node, suffix=''):
     obj_node = hou.node(network_location).createNode('geo')
     obj_node.setName(node_name)
     obj_node.setColor(DynamiteColor.GRAY_LIGHT)
+    set_node_shape(obj_node, 6)
     obj_node.setDisplayFlag(False)
     obj_node.setSelectableInViewport(False)
     set_default_folders_hidden(obj_node.parmTemplateGroup())
@@ -711,8 +723,9 @@ def create_retopo_group(prim_group, control_node):
                                              script_callback_language=hou.scriptLanguage.Python, help=help)
 
     help = "Isolates the reference and cage objects of the current bake group."
-    script_callback = "%s;dynamite.set_group_display(%s, False, False, False, hou.node('%s'));"\
-                      "dynamite.set_group_display(('%s',), False, True, True, hou.node('%s'));" %\
+    script_callback = "%s;dynamite.set_group_display(%s, False, False, False, hou.node('%s'));" \
+                      "dynamite.set_group_display(('%s',), False, True, True, hou.node('%s'));" \
+                      "dynamite.home()" %\
                       (Dynamite.MODULE_IMPORT, all_prim_group_names, control_node.path(),
                        prim_group_name, control_node.path())
     isolate_button = hou.ButtonParmTemplate('%s_isolate' % prim_group_name, 'Isolate',
@@ -1277,6 +1290,14 @@ def get_prim_group_names(geo, sort=True):
     return sorted(prim_group_names) if sort else prim_group_names
 
 
+def home():
+    """Frames and homes the viewport on visible geometry."""
+    viewer = toolutils.sceneViewer()
+    viewport = viewer.curViewport()
+    viewport.draw()
+    viewport.homeAll()
+
+
 def home_network(path, frame_percentage=0.2):
     """Homes the Network Editor on nodes inside a given path.
     Arguments:
@@ -1292,12 +1313,13 @@ def home_network(path, frame_percentage=0.2):
         position = node.position()
         pos_x.append(position[0])
         pos_y.append(position[1])
+    #frame_size = ((max(pos_x) - min(pos_x)), (max(pos_y) - min(pos_y)))
     frame_size = (frame_percentage * (max(pos_x) - min(pos_x)), frame_percentage * (max(pos_y) - min(pos_y)))
     bounds = hou.BoundingRect(min(pos_x) - frame_size[0] / 2,
                               min(pos_y) - frame_size[1] / 2,
                               max(pos_x) + frame_size[0] / 2,
                               max(pos_y) + frame_size[1] / 2)
-    network_editor.setVisibleBounds(bounds)
+    network_editor.setVisibleBounds(bounds, transition_time=0.5, max_scale=100)
 
 
 def primitive_groups_match(geo1, geo2):
@@ -1560,7 +1582,8 @@ def update_display_buttons(control_node):
 
         # Isolate button.
         script_callback = "%s;dynamite.set_group_display(%s, False, False, False, hou.node('%s'));" \
-                          "dynamite.set_group_display(('%s',), False, True, True, hou.node('%s'));" % \
+                          "dynamite.set_group_display(('%s',), False, True, True, hou.node('%s'));" \
+                          "dynamite.home()" % \
                           (Dynamite.MODULE_IMPORT, prim_group_names, control_node.path(),
                            prim_group_name, control_node.path())
 
@@ -1610,6 +1633,18 @@ def set_current_prim_groups(control_node, prim_group_names):
     :type control_node: hou.ObjNode
     :type prim_group_names: list[str]"""
     control_node.parm('prim_groups').set(' '.join(sorted(prim_group_names)))
+
+
+def set_node_shape(node, shape):
+    """Sets shape of a node.
+    Arguments:
+        node - node that will be reshaped.
+        shape - shape indes from NetworkEditor.nodeShapes()
+    :type node: hou.Node
+    :type shape: int"""
+    editor = hou.ui.paneTabOfType(hou.paneTabType.NetworkEditor)
+    shapes = editor.nodeShapes()
+    node.setUserData('nodeshape', shapes[shape])
 
 
 if __name__ == '__main__':
