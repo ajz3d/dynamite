@@ -4,19 +4,22 @@ Dynamite is a Python script for Houdini that fits well in the iterative 3D asset
 
 The script streamlines the process of creating bake cages and reduces tediousness of recreating them whenever the model is replaced by its newer version. With Dynamite you won't need to redo cages of objects which weren't modified in the last iteration, and only those that were altered will require your attention. This reduces the time that would otherwise be spent on redoing all cages from scratch on each consecutive asset iteration.
 
+[Download](https://github.com/ajz3d/dynamite/releases/latest)
+
 ## Installation
-1.  Clone or download Dynamite repository and extract it to a directory of your choice.
-2.  Edit your houdini.env file and add Dynamite path to `HOUDINI_PATH` environment variable, for example:
+1.  Download the latest release (see the top of the page for the link).
+2.  Extract contents of the archive to a directory of your choice.
+3.  Edit your houdini.env file and add path to extracted folder to `HOUDINI_PATH` environment variable, for example:
 ```
 HOUDINI_PATH=C:\Users\YourName\Documents\dynamite;&
 ```
-3.  If `HOUDINI_PATH` already contains some path, like a path to HoudiniGameDevelopmentTools, add path to Dynamite at the end of the variable declaration. For example:
+4.  If `HOUDINI_PATH` already contains some path, like a path to HoudiniGameDevelopmentTools, add path to Dynamite at the end of the variable declaration. For example:
 ```
 HOUDINI_PATH=C:\Users\YourName\Documents\HoudiniGameDevelopmentTools;C:\Users\YourName\Documents\dynamite;&
 ```
-4.  Start Houdini.
-5.  Add `Dynamite` shelf to your shelf bar.
-6.  Click the `Dynamite` shelf tool to create the control node.
+5.  Start Houdini.
+6.  Add `Dynamite` shelf to your shelf bar.
+7.  Click the `Dynamite` shelf tool to create the control node.
 
 If you don't want to clutter your shelf bar with yet another shelf containing a single shelf button, you can create a new shelf tool wherever you like and paste the following code into its **Script** section:
 
