@@ -5,13 +5,20 @@ Dynamite is a Python script for Houdini that fits perfectly in the iterative 3D 
 The script streamlines the process of creating cages and reduces tediousness of recreating them whenever the model gets replaced by its new version. With Dynamite you won't need to redo cages of objects which weren't modified in the last iteration, and only those that were altered will require your attention. This reduces the time that would otherwise be spent on redoing all cages from scratch on each consecutive asset iteration.
 
 ## Installation
-1.  Clone or download Dynamite repository and extract `./dynamite` folder to your `HOUDINI_USER_PREF_DIR\python2.7libs` directory. `HOUDINI_USER_PREF_DIR` is usually `c:\Users\your_user_name\Documents\Houdinixx.x` path on Windows.
-2.  Extract contents of `./toolbar` to `HOUDINI_USER_PREF_DIR\toolbar` directory.
-3.  Start Houdini.
-4.  Add `Dynamite` shelf to your shelf bar.
-5.  Click the `Dynamite` shelf tool.
+1.  Clone or download Dynamite repository and extract `./dynamite` folder to a directory of your choice.
+2.  Edit your houdini.env file and add Dynamite path to `HOUDINI_PATH` global variable, for example:
+```
+HOUDINI_PATH=C:\Users\YourName\Documents\dynamite;&
+```
+3.  If `HOUDINI_PATH` already contains some path, like a path to HoudiniGameDevelopmentTools, add path to Dynamite at the end of the variable declaration. For example:
+```
+HOUDINI_PATH=C:\Users\YourName\Documents\HoudiniGameDevelopmentTools;C:\Users\YourName\Documents\dynamite;&
+```
+4.  Start Houdini.
+5.  Add `Dynamite` shelf to your shelf bar.
+6.  Click the `Dynamite` shelf tool to create the control node.
 
-If you don't want to clutter your shelf bar with yet another shelf, you can create a new shelf tool wherever you like and paste the following code into its **Script** section:
+If you don't want to clutter your shelf bar with yet another shelf containing a single shelf button, you can create a new shelf tool wherever you like and paste the following code into its **Script** section:
 
 ```python
 import dynamite.dynamite as dynamite

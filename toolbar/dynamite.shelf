@@ -5,8 +5,8 @@
  Note, that two definitions of the same element are not allowed in
  a single file. -->
 
-  <tool name="dynamite" label="Dynamite" icon="PLASMA_App">
-    <script scriptType="python"><![CDATA[import dynamite.dynamite as dynamite
+  <tool name="dynamite" label="Dynamite" icon="$HOUDINI_USER_PREF_DIR/toolbar/dynamite/dynamite_shelf_icon.png">
+    <script scriptType="python"><![CDATA[import dynamite
 reload(dynamite)
 
 def getCurrentNetworkEditor(desktop):
@@ -23,10 +23,10 @@ else:
   </tool>
 
   <toolshelf name="dynamite" label="Dynamite">
-    <memberTool name="dynamite1"/>
+    <memberTool name="dynamite0"/>
   </toolshelf>
 
-  <tool name="dynamite1" label="Dynamite" icon="$HOUDINI_USER_PREF_DIR/toolbar/dynamite/dynamite_shelf_icon.png">
+  <tool name="dynamite0" label="Dynamite" icon="dynamite_shelf_icon.png">
     <script scriptType="python"><![CDATA[import dynamite.dynamite as dynamite
 reload(dynamite)
 

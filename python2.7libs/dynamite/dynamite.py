@@ -26,7 +26,7 @@ import sys
 import time
 import toolutils
 
-__version__ = '0.9.2'
+__version__ = '0.9.3'
 
 
 class Dynamite(object):
