@@ -4,44 +4,20 @@ Dynamite is a Python script for Houdini that fits well in the iterative 3D asset
 
 The script streamlines the process of creating bake cages and reduces tediousness of recreating them whenever the model is replaced by its newer version. With Dynamite you won't need to redo cages of objects which weren't modified in the last iteration, and only those that were altered will require your attention. This reduces the time that would otherwise be spent on redoing all cages from scratch on each consecutive asset iteration.
 
-[Download](https://github.com/ajz3d/dynamite/releases/latest)
-
 ## Installation
-1.  Download the latest release (see the top of the page for the link).
-2.  Extract contents of the archive to a directory of your choice.
-3.  Edit your houdini.env file and add path to extracted folder to `HOUDINI_PATH` environment variable, for example:
-```
-HOUDINI_PATH=C:\Users\YourName\Documents\dynamite;&
-```
-4.  If `HOUDINI_PATH` already contains some path, like a path to HoudiniGameDevelopmentTools, add path to Dynamite at the end of the variable declaration. For example:
-```
-HOUDINI_PATH=C:\Users\YourName\Documents\HoudiniGameDevelopmentTools;C:\Users\YourName\Documents\dynamite;&
-```
-5.  Start Houdini.
-6.  Add `Dynamite` shelf to your shelf bar.
-7.  Click the `Dynamite` shelf tool to create the control node.
+1.  Clone the repository into your `$HOUDINI_USER_PREF_DIR`.
+2.  Edit your houdini.env file and add path to extracted folder to `$HOUDINI_PATH` environment variable, for example:
+    ```
+    # On GNU/Linux:
+    HOUDINI_PATH="$HOUDINI_USER_PREF_DIR:$HOUDINI_USER_PREF_DIR/dynamite:&"
+    # On Windows:
+    HOUDINI_PATH="C:\Users\YourName\Documents\dynamite;&"
+    ```
+3.  Start Houdini.
+4.  Add `Dynamite` shelf to your shelf bar.
+5.  Click the `Dynamite` shelf tool to create the control node.
 
-If you don't want to clutter your shelf bar with yet another shelf containing a single shelf button, you can create a new shelf tool wherever you like and paste the following code into its **Script** section:
-
-```python
-import dynamite.dynamite as dynamite
-reload(dynamite)
-
-def getCurrentNetworkEditor(desktop):
-    for pane in desktop.paneTabs():
-        if isinstance(pane, hou.NetworkEditor) and pane.isCurrentTab():
-            return pane
-
-if hou.node('/obj/dynamite_control') is not None:
-    control_node = hou.node('/obj/dynamite_control')
-    getCurrentNetworkEditor(hou.ui.curDesktop()).setCurrentNode(control_node)
-else:
-    control_node = dynamite.create_control_node()
-    getCurrentNetworkEditor(hou.ui.curDesktop()).setCurrentNode(hou.node('/obj/dynamite_control'))
-```
-Do note however, that you will need to update this code every time you install a newer version of Dynamite because there's always a chance that some changes might be introduced to the shelf tool.
-
-## Usage
+## How to Use?
 ### Requirements
 Your retopo and reference meshes must have corresponding object names. What it means is that if you have, for instance, a character wearing a suit and a tie in your sculpture, and you retopologize those two high resolution objects into one object named `body`, then you also need to combine `suit` and `tie` objects in your sculpture into one named `body`. It also means that the number of reference objects must be the same as the number of retopo objects.
 
@@ -94,6 +70,8 @@ You can choose which FBX version to use for export and to export it in ASCII or 
 **Use Name Correspondence**: By enabling this toggle you will tell Dynamite to add suffixes to object names of retopo and reference meshes. Suffixes can be defined in **Retopo Suffix** and **Reference Suffix** parameters. If retopo suffix is set to `low` and reference suffix is set to `high`, object named `body` will be exported as `body_low` and `body_high`. This is useful for baking in Substance Painter. Note that if you're baking in *xNormal*, you will have to explode your bake groups instead of using name correspondence baking.
 
 **Triangulate** - triangulates the retopo mesh. Cage mesh will pick the triangulation up from retopo mesh. This is disabled by default because triangulation clutters the viewport and makes tweaking the cage more difficult. For a proper bake, make sure you enable it before exporting your bake bundles and make sure the triangulation matches your final asset's. Triangulation is performed with the *Divide SOP* set to defaults. Its settings will be externalized in the next version. Delaunay triangulation would be very welcome as an option if someone could provide its implementation... ;)
+
+**NOTE:** If you're exporting to FBX files, display flag of the subnet containing Dynamite network must be enabled (ROPs must be able to see what they are exporting). Otherwise, exported FBX files will be empty and unreadable.
 
 Press **Export All** button to export all bake groups. Load the result in the baker of your choice.
 

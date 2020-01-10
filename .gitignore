@@ -3,3 +3,6 @@
 
 # Ignore PyCharm-specific files.
 .idea
+
+# Ignore virtual environment path.
+venv

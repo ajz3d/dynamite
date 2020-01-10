@@ -54,26 +54,28 @@ class DynamiteColor(object):
     RED = hou.Color((0.50, 0, 0))
 
 
-def create_control_node(path='/obj', in_retopo='$HIP/geo_bake/in_retopo.bgeo',
-                        in_reference='$HIP/geo_bake/in_reference.bgeo',
-                        out_retopo='$HIP/geo_bake/out_retopo.fbx',
-                        out_reference='$HIP/geo_bake/out_reference.fbx',
-                        out_cage='$HIP/geo_bake/out_cages.fbx'):
+def create_control_node(in_retopo='`op:/obj/bake_geo/OUT_LOWPOLY`',
+                        in_reference='`op:/obj/bake_geo/OUT_HIPOLY`',
+                        out_retopo='$HIP/geo/bake/retopo.fbx',
+                        out_reference='$HIP/geo/bake/reference.fbx',
+                        out_cage='$HIP/geo/bake/cages.fbx'):
     """Routine for creating the main Dynamite control node, in the path provided as string.
     Arguments:
-        path - path where the control node will be generated (untested!).
         in_retopo - default path to retopo source file. "op:/..." path type should be surrounded with "`" chars.
         in_reference - default path to reference source file. "op:/..." path type should be surrounded with "`" chars.
         out_retopo - default retopo export path.
         out_reference - default reference export path.
         out_cage - default cage export path.
-    :type path: str
     :type in_retopo: str
     :type in_reference: str
     :type out_retopo: str
     :type out_reference: str
     :type out_cage: str
     """
+    path = get_current_network_editor(hou.ui.curDesktop()).pwd().path()
+    if hou.node('%s/dynamite_control' % (path)) is not None:
+        hou.ui.displayMessage('Dynamite network is already present in this location.')
+        sys.exit(1)
     control_node = hou.node(path).createNode('null')
     control_node.setName('dynamite_control')
     control_node.setDisplayFlag(False)
@@ -1168,7 +1170,7 @@ def export_fbx(group_type, suffix, control_node):
         obj_nodes.append(hou.node('%s/%s_%s' % (network_location, name, group_type)))
     subnet = create_fbx_export_nodes(obj_nodes, '_%s' % group_type, '%s' % suffix, control_node)[0].parent()
     subnet.setColor(DynamiteColor.RED)
-    fbx_rop = create_fbx_rop('retopo')
+    fbx_rop = create_fbx_rop(group_type)
     export_path = control_node.parm('%s_export_path' % group_type).eval()
     fbx_rop.parm('sopoutput').set(export_path)
     fbx_rop.parm('startnode').set(subnet.path())
@@ -1393,7 +1395,6 @@ def set_group_display(prim_group_names, show_retopo, show_reference, show_cage, 
     :type show_cage: bool
     :type control_node: hou.ObjNode"""
     network_location = control_node.parm('network_location').eval()
-
     for prim_group_name in prim_group_names:
         retopo_obj = hou.node('%s/%s_retopo' % (network_location, prim_group_name))
         reference_obj = hou.node('%s/%s_reference' % (network_location, prim_group_name))

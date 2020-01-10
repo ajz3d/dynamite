@@ -30,16 +30,11 @@ else:
     <script scriptType="python"><![CDATA[import dynamite.dynamite as dynamite
 reload(dynamite)
 
-def getCurrentNetworkEditor(desktop):
-    for pane in desktop.paneTabs():
-        if isinstance(pane, hou.NetworkEditor) and pane.isCurrentTab():
-            return pane
-
-if hou.node('/obj/dynamite_control') is not None:
-    control_node = hou.node('/obj/dynamite_control')
-    getCurrentNetworkEditor(hou.ui.curDesktop()).setCurrentNode(control_node)
-else:
-    control_node = dynamite.create_control_node()
-    getCurrentNetworkEditor(hou.ui.curDesktop()).setCurrentNode(hou.node('/obj/dynamite_control'))]]></script>
+#def getCurrentNetworkEditor(desktop):
+#    for pane in desktop.paneTabs():
+#        if isinstance(pane, hou.NetworkEditor) and pane.isCurrentTab():
+#            return pane
+          
+control_node = dynamite.create_control_node()]]></script>
   </tool>
 </shelfDocument>
